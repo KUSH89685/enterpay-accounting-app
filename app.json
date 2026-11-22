@@ -1,12 +1,19 @@
+
+}
 {
   "expo": {
     "name": "Enterpay Accounting",
-    "slug": "enterpay-accounting-app",
+    "slug": "enterpay-accounting-1",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "android": {
       "package": "in.enterpay.accounting"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6e551537-b98d-46da-95c9-383c0299865d"
+      }
     }
   }
 }
