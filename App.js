@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import LoginScreen from './screens/LoginScreen';
+import SaleInvoiceScreen from './screens/SaleInvoiceScreen';
 
 const MENU_ITEMS = [
   { key: 'sale_invoice', title: 'Sale Invoice', icon: '📄' },
@@ -30,12 +31,14 @@ const MENU_ITEMS = [
 
 export default function App() {
   const [loginData, setLoginData] = useState(null);
+  const [activeScreen, setActiveScreen] = useState('dashboard');
 
   if (!loginData) {
     return (
       <LoginScreen
         onLoginSuccess={(data) => {
           setLoginData(data);
+          setActiveScreen('dashboard');
         }}
       />
     );
@@ -43,7 +46,20 @@ export default function App() {
 
   const user = loginData.user || loginData || {};
 
+  if (activeScreen === 'sale_invoice') {
+    return (
+      <SaleInvoiceScreen
+        user={user}
+        onBack={() => setActiveScreen('dashboard')}
+      />
+    );
+  }
+
   const handleCardPress = (item) => {
+    if (item.key === 'sale_invoice') {
+      setActiveScreen('sale_invoice');
+      return;
+    }
     Alert.alert(item.title, `${item.title} सेक्शन जल्द ही जोड़ा जाएगा।`);
   };
 
@@ -59,7 +75,10 @@ export default function App() {
 
         <TouchableOpacity
           style={styles.logoutBtn}
-          onPress={() => setLoginData(null)}
+          onPress={() => {
+            setLoginData(null);
+            setActiveScreen('dashboard');
+          }}
         >
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
