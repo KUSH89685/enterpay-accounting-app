@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 
-const API_URL = 'https://YOUR_DOMAIN/api/login.php';
+const API_URL = 'https://accounting.enterpay.in/api/login.php';
 
 export default function LoginScreen({ onLoginSuccess }) {
   const [loginId, setLoginId] = useState('');
@@ -38,10 +38,7 @@ export default function LoginScreen({ onLoginSuccess }) {
       const data = await response.json();
 
       if (response.ok && data.status) {
-        onLoginSuccess({
-          ...(data.user || {}),
-          token: data.token || null,
-        });
+        onLoginSuccess(data);
       } else {
         Alert.alert('Login असफल', data.message || 'गलत login ID या password।');
       }
