@@ -41,6 +41,7 @@ export default function SaleInvoiceScreen({ user, onBack }) {
   const [saving, setSaving] = useState(false);
 
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [selectedCompany, setSelectedCompany] = useState(null);
   const [viewLoading, setViewLoading] = useState(false);
 
   const userId = user?.id;
@@ -150,17 +151,19 @@ export default function SaleInvoiceScreen({ user, onBack }) {
 
   const handleViewInvoice = async (item) => {
     setSelectedInvoice({ ...item, items: [] });
+    setSelectedCompany(null);
     setViewLoading(true);
     try {
       const res = await fetch(
         `${INVOICES_API_URL}?id=${item.id}&user_id=${userId}`
       );
       const data = await res.json();
-      if (res.ok && data.status && data.invoice) {
-        setSelectedInvoice(data.invoice);
+      if (res.ok && data.status) {
+        if (data.invoice) setSelectedInvoice(data.invoice);
+        if (data.company) setSelectedCompany(data.company);
       }
     } catch (e) {
-      // Modal already displays available invoice fields
+      // Basic item data already shown
     } finally {
       setViewLoading(false);
     }
@@ -233,6 +236,13 @@ export default function SaleInvoiceScreen({ user, onBack }) {
       </View>
     );
   };
+
+  const subVal = Number(selectedInvoice?.subtotal ?? selectedInvoice?.grand_total ?? 0);
+  const cgstVal = Number(selectedInvoice?.cgst ?? subVal * 0.09);
+  const sgstVal = Number(selectedInvoice?.sgst ?? subVal * 0.09);
+  const totalWithGstVal = Number(
+    selectedInvoice?.grand_total_with_gst ?? subVal + cgstVal + sgstVal
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -426,51 +436,75 @@ export default function SaleInvoiceScreen({ user, onBack }) {
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>
-              Invoice #{selectedInvoice?.id || ''}
-            </Text>
-            <Text style={styles.modalLine}>
-              Customer: {selectedInvoice?.customer_name || '-'}
-            </Text>
-            <Text style={styles.modalLine}>
-              Date: {selectedInvoice?.invoice_date || '-'}
-            </Text>
-            <Text style={styles.modalLine}>
-              Payment Type: {selectedInvoice?.payment_type || '-'}
-            </Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={styles.modalTitle}>
+                Tax Invoice #{selectedInvoice?.id || ''}
+              </Text>
 
-            <Text style={[styles.sectionTitle, { marginTop: 12 }]}>Items</Text>
-            {viewLoading ? (
-              <ActivityIndicator size="small" color="#059669" />
-            ) : Array.isArray(selectedInvoice?.items) &&
-              selectedInvoice.items.length > 0 ? (
-              selectedInvoice.items.map((it, i) => (
-                <View key={i} style={styles.modalItemRow}>
-                  <Text style={styles.modalItemName}>
-                    {it.product_name} ({it.qty} × ₹{Number(it.price || 0).toFixed(2)})
-                  </Text>
-                  <Text style={styles.modalItemAmt}>
-                    ₹{Number(it.total || 0).toFixed(2)}
+              {selectedCompany?.company_name ? (
+                <Text style={styles.modalCompany}>
+                  {selectedCompany.company_name}
+                  {selectedCompany.gstin ? ` | GSTIN: ${selectedCompany.gstin}` : ''}
+                </Text>
+              ) : null}
+
+              <Text style={styles.modalLine}>
+                Customer: {selectedInvoice?.customer_name || '-'}
+              </Text>
+              <Text style={styles.modalLine}>
+                Date: {selectedInvoice?.invoice_date || '-'}
+              </Text>
+              <Text style={styles.modalLine}>
+                Payment Type: {selectedInvoice?.payment_type || '-'}
+              </Text>
+
+              <Text style={[styles.sectionTitle, { marginTop: 12 }]}>Items</Text>
+              {viewLoading ? (
+                <ActivityIndicator size="small" color="#059669" />
+              ) : Array.isArray(selectedInvoice?.items) &&
+                selectedInvoice.items.length > 0 ? (
+                selectedInvoice.items.map((it, i) => (
+                  <View key={i} style={styles.modalItemRow}>
+                    <Text style={styles.modalItemName}>
+                      {it.product_name} ({it.qty} × ₹{Number(it.price || 0).toFixed(2)})
+                    </Text>
+                    <Text style={styles.modalItemAmt}>
+                      ₹{Number(it.total || 0).toFixed(2)}
+                    </Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.modalLine}>Items विवरण उपलब्ध नहीं है।</Text>
+              )}
+
+              <View style={styles.modalSummaryBox}>
+                <View style={styles.modalSummaryRow}>
+                  <Text style={styles.modalSummaryLabel}>Sub Total:</Text>
+                  <Text style={styles.modalSummaryVal}>₹{subVal.toFixed(2)}</Text>
+                </View>
+                <View style={styles.modalSummaryRow}>
+                  <Text style={styles.modalSummaryLabel}>CGST (9%):</Text>
+                  <Text style={styles.modalSummaryVal}>₹{cgstVal.toFixed(2)}</Text>
+                </View>
+                <View style={styles.modalSummaryRow}>
+                  <Text style={styles.modalSummaryLabel}>SGST (9%):</Text>
+                  <Text style={styles.modalSummaryVal}>₹{sgstVal.toFixed(2)}</Text>
+                </View>
+                <View style={styles.modalTotalRow}>
+                  <Text style={styles.modalTotalLabel}>Total (with GST):</Text>
+                  <Text style={styles.modalTotalVal}>
+                    ₹{totalWithGstVal.toFixed(2)}
                   </Text>
                 </View>
-              ))
-            ) : (
-              <Text style={styles.modalLine}>Items विवरण उपलब्ध नहीं है।</Text>
-            )}
+              </View>
 
-            <View style={styles.modalTotalRow}>
-              <Text style={styles.modalTotalLabel}>Grand Total</Text>
-              <Text style={styles.modalTotalVal}>
-                ₹{Number(selectedInvoice?.grand_total || 0).toFixed(2)}
-              </Text>
-            </View>
-
-            <TouchableOpacity
-              style={styles.closeModalBtn}
-              onPress={() => setSelectedInvoice(null)}
-            >
-              <Text style={styles.closeModalText}>Close</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.closeModalBtn}
+                onPress={() => setSelectedInvoice(null)}
+              >
+                <Text style={styles.closeModalText}>Close</Text>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -622,95 +656,4 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#475569',
-    marginBottom: 4,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#cbd5e1',
-    borderRadius: 7,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    fontSize: 14,
-    backgroundColor: '#f8fafc',
-    marginBottom: 10,
-    color: '#0f172a',
-  },
-  itemBox: {
-    backgroundColor: '#f8fafc',
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
-  },
-  itemHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  itemLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#059669',
-  },
-  removeText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#dc2626',
-  },
-  twoCol: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  halfCol: {
-    flex: 1,
-  },
-  addRowBtn: {
-    borderWidth: 1,
-    borderColor: '#059669',
-    backgroundColor: '#ecfdf5',
-    borderRadius: 7,
-    paddingVertical: 9,
-    alignItems: 'center',
-  },
-  addRowText: {
-    color: '#059669',
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  totalBox: {
-    backgroundColor: '#f0fdf4',
-    borderWidth: 1,
-    borderColor: '#bbf7d0',
-    borderRadius: 8,
-    padding: 10,
-  },
-  totalText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#059669',
-  },
-  payGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  payChip: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#cbd5e1',
-    backgroundColor: '#ffffff',
-  },
-  payChipActive: {
-    backgroundColor: '#f59e0b',
-    borderColor: '#f59e0b',
-  },
-  payChipText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#475569',
-  },
-  payChipTextActive: {
+    c
