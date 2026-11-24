@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Enterpay Accounting",
-    "slug": "enterpay-accounting-1",
+    "slug": "enterpay-1",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -13,7 +13,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "e4a461aa-0ea9-4b99-af50-9dc87b7f2906"
       }
     }
   }
