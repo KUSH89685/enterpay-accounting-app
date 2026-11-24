@@ -597,4 +597,91 @@ const styles = StyleSheet.create({
   drawerBrand: {
     color: '#ffffff',
     fontSize: 16,
-    fontWeight
+    fontWeight: '700',
+  },
+  drawerSub: {
+    color: '#e6f8f2',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  closeIcon: {
+    color: '#ffffff',
+    fontSize: 24,
+    lineHeight: 24,
+    fontWeight: '700',
+  },
+  drawerScroll: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  menuLink: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 11,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginBottom: 2,
+  },
+  menuLinkText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#334155',
+  },
+  arrowText: {
+    fontSize: 11,
+    color: '#64748b',
+  },
+  subMenuBox: {
+    backgroundColor: '#f8fafc',
+    borderRadius: 6,
+    paddingVertical: 4,
+    paddingLeft: 14,
+    marginBottom: 6,
+  },
+  subLink: {
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+  },
+  subLinkText: {
+    fontSize: 13,
+    color: '#475569',
+  },
+  greenBold: {
+    color: '#00b074',
+    fontWeight: '700',
+  },
+  supportBox: {
+    backgroundColor: '#f8fafc',
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 12,
+    marginBottom: 16,
+  },
+  supportTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1e293b',
+    marginBottom: 4,
+  },
+  supportLine: {
+    fontSize: 12,
+    color: '#475569',
+    marginTop: 2,
+  },
+  drawerFooter: {
+    padding: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#e2e8f0',
+    backgroundColor: '#ffffff',
+  },
+  drawerLogoutBtn: {
+    backgroundColor: '#ef4444',
+    paddingVertical: 11,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+});
