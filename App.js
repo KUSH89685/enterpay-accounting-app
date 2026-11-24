@@ -124,7 +124,6 @@ export default function App() {
               </Text>
             </TouchableOpacity>
 
-            {/* Products / Services Dropdown */}
             <TouchableOpacity
               style={styles.menuLink}
               onPress={() => toggleGroup('products')}
@@ -187,7 +186,6 @@ export default function App() {
               </View>
             )}
 
-            {/* Sale Invoice Dropdown */}
             <TouchableOpacity
               style={styles.menuLink}
               onPress={() => toggleGroup('sale_invoice')}
@@ -244,7 +242,6 @@ export default function App() {
               <Text style={styles.menuLinkText}>📱 Mobile Service Slip</Text>
             </TouchableOpacity>
 
-            {/* Purchase Invoice Dropdown */}
             <TouchableOpacity
               style={styles.menuLink}
               onPress={() => toggleGroup('purchase')}
@@ -277,7 +274,6 @@ export default function App() {
               </View>
             )}
 
-            {/* Payment Dropdown */}
             <TouchableOpacity
               style={styles.menuLink}
               onPress={() => toggleGroup('payment')}
@@ -356,7 +352,6 @@ export default function App() {
               <Text style={styles.menuLinkText}>📑 Other Documents</Text>
             </TouchableOpacity>
 
-            {/* Report Dropdown */}
             <TouchableOpacity
               style={styles.menuLink}
               onPress={() => toggleGroup('report')}
@@ -593,4 +588,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   drawerHeader: {
-    back
+    backgroundColor: '#00b074',
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  drawerBrand: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight
