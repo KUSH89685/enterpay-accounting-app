@@ -27,12 +27,11 @@ const getTodayDate = () => {
 };
 
 export default function SaleInvoiceScreen({ user, onBack }) {
-  const [mode, setMode] = useState('list'); // 'list' | 'create'
+  const [mode, setMode] = useState('list');
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Create form state
   const [customerName, setCustomerName] = useState('');
   const [invoiceDate, setInvoiceDate] = useState(getTodayDate());
   const [paymentType, setPaymentType] = useState('CREDIT');
@@ -41,7 +40,6 @@ export default function SaleInvoiceScreen({ user, onBack }) {
   ]);
   const [saving, setSaving] = useState(false);
 
-  // View invoice modal state
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [viewLoading, setViewLoading] = useState(false);
 
@@ -162,7 +160,7 @@ export default function SaleInvoiceScreen({ user, onBack }) {
         setSelectedInvoice(data.invoice);
       }
     } catch (e) {
-      // Basic item data already shown in modal
+      // Modal already displays available invoice fields
     } finally {
       setViewLoading(false);
     }
@@ -420,7 +418,6 @@ export default function SaleInvoiceScreen({ user, onBack }) {
         />
       )}
 
-      {/* View Invoice Modal */}
       <Modal
         visible={!!selectedInvoice}
         transparent
@@ -711,4 +708,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f59e0b',
     borderColor: '#f59e0b',
   },
-  payChipT
+  payChipText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#475569',
+  },
+  payChipTextActive: {
