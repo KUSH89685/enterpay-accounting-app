@@ -1,19 +1,20 @@
 {
-  "expo": {
-    "name": "Enterpay Accounting",
-    "slug": "enterpay-accounting-1",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "userInterfaceStyle": "light",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "android": {
-      "package": "in.enterpay.accounting"
+  "cli": {
+    "version": ">= 12.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
     },
-    "extra": {
-      "eas": {
-        "projectId": ""
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "apk"
       }
     }
   }
